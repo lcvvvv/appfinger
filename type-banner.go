@@ -1,0 +1,12 @@
+package main
+
+type Banner struct {
+	Title      string
+	Header     string
+	Body       string
+	Response   string
+	Protocol   string
+	Cert       string
+	Port       string
+	StatusCode string
+}
