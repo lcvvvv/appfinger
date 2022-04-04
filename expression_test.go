@@ -1,4 +1,4 @@
-package main
+package httpfinger
 
 import (
 	"fmt"
@@ -55,7 +55,7 @@ func TestAbcdefg(t *testing.T) {
 }
 
 func TestTemp(t *testing.T) {
-	err := makeDatabase(databaseString)
+	Data, err := New("")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -113,7 +113,7 @@ marginwidth="0">
 	}
 
 	products := Data.Search(banner)
-	for _, product := range products {
-		fmt.Println(product.ProductName)
+	for _, productName := range products {
+		fmt.Println(productName)
 	}
 }

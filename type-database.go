@@ -1,16 +1,8 @@
-package main
-
-import (
-	"errors"
-	"httpfinger/product"
-	"strings"
-)
+package httpfinger
 
 type Database struct {
 	database []*FingerPrint
 }
-
-var Data *Database
 
 func (d *Database) Add(s string) error {
 	httpFinger, err := NewFingerPrint(s)
@@ -21,24 +13,12 @@ func (d *Database) Add(s string) error {
 	return nil
 }
 
-func (d *Database) Search(banner *Banner) []*product.Product {
-	var products []*product.Product
+func (d *Database) Search(banner *Banner) []string {
+	var products []string
 	for _, fingerPrint := range d.database {
-		if p := fingerPrint.Match(banner); p != nil {
-			products = append(products, p)
+		if productName := fingerPrint.Match(banner); productName != "" {
+			products = append(products, productName)
 		}
 	}
 	return products
-}
-
-func makeDatabase(source string) error {
-	Data = &Database{database: []*FingerPrint{}}
-
-	for _, line := range strings.Split(source, "\n") {
-		err := Data.Add(line)
-		if err != nil {
-			return errors.New(err.Error() + line)
-		}
-	}
-	return nil
 }

@@ -1,4 +1,4 @@
-package main
+package httpfinger
 
 import (
 	"errors"
@@ -20,7 +20,6 @@ type Expression struct {
 }
 
 func NewExpression(expr string) (*Expression, error) {
-
 	e := &Expression{}
 	e.value = expr
 	//修饰expr
@@ -28,7 +27,6 @@ func NewExpression(expr string) (*Expression, error) {
 	//合法性校验
 	if err := exprVerification(expr); err != nil {
 		return nil, err
-
 	}
 	//提取param数组
 	var paramSlice []*Param
@@ -50,13 +48,18 @@ func NewExpression(expr string) (*Expression, error) {
 }
 
 func (e *Expression) Match(banner *Banner) bool {
+	expr := e.MakeBoolExpression(banner)
+	b, _ := ParseBoolFromString(expr)
+	return b
+}
+
+func (e *Expression) MakeBoolExpression(banner *Banner) string {
 	var expr = e.expr
 	for index, param := range e.paramSlice {
 		b := param.Match(banner)
 		expr = strings.Replace(expr, "${"+strconv.Itoa(index+1)+"}", strconv.FormatBool(b), 1)
 	}
-	b, _ := ParseBoolFromString(expr)
-	return b
+	return expr
 }
 
 func exprVerification(expr string) error {
@@ -66,7 +69,8 @@ func exprVerification(expr string) error {
 	str = regexp.MustCompile(`[&| ()]`).ReplaceAllString(str, "")
 	//检测是否存在其他字符
 	if str != "" {
-		return errors.New(str + " is unknown")
+		str = strings.ReplaceAll(str, `[quota]`, `\"`)
+		return errors.New(strconv.Quote(str) + " is unknown")
 	}
 	return nil
 }
@@ -84,7 +88,18 @@ const (
 	SuperEqual        // ==
 )
 
-var keywordSlice = []string{"Title", "Body", "Header", "Response", "Protocol", "Cert", "Port"}
+var keywordSlice = []string{
+	"Title",
+	"Header",
+	"Body",
+	"Response",
+	"Protocol",
+	"Cert",
+	"Port",
+	"Hash",
+	"Icon",
+}
+
 var paramRegx = regexp.MustCompile(`([a-zA-Z0-9]+) *(!=|=|~=|==) *"([^"\n]+)"`)
 var keywordRegx = regexp.MustCompile("^" + strings.Join(keywordSlice, "|") + "$")
 
