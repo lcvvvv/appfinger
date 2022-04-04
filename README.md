@@ -1,5 +1,5 @@
-# httpfinger
-httpfinger(和风)是一款Http指纹管理工具~~~
+# appfinger
+appfinger(和风)是一款Http指纹管理工具~~~
 
 
 # 愿景

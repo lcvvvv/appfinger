@@ -1,4 +1,4 @@
-module github.com/lcvvvv/httpfinger
+module github.com/lcvvvv/appfinger
 
 go 1.16
 

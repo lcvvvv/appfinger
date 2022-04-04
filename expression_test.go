@@ -1,4 +1,4 @@
-package httpfinger
+package appfinger
 
 import (
 	"fmt"

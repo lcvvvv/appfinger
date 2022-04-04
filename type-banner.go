@@ -1,4 +1,4 @@
-package httpfinger
+package appfinger
 
 type Banner struct {
 	Title    string
